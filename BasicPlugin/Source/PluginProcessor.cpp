@@ -15,9 +15,9 @@ BasicPluginAudioProcessor::BasicPluginAudioProcessor()
      : AudioProcessor (BusesProperties()
                      #if ! JucePlugin_IsMidiEffect
                       #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  juce::AudioChannelSet::stereo(), true)
+                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
                       #endif
-                       .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
+                       .withOutput ("Output", AudioChannelSet::stereo(), true)
                      #endif
                        )
 #endif
@@ -29,7 +29,7 @@ BasicPluginAudioProcessor::~BasicPluginAudioProcessor()
 }
 
 //==============================================================================
-const juce::String BasicPluginAudioProcessor::getName() const
+const String BasicPluginAudioProcessor::getName() const
 {
     return JucePlugin_Name;
 }
@@ -81,12 +81,12 @@ void BasicPluginAudioProcessor::setCurrentProgram (int index)
 {
 }
 
-const juce::String BasicPluginAudioProcessor::getProgramName (int index)
+const String BasicPluginAudioProcessor::getProgramName (int index)
 {
     return {};
 }
 
-void BasicPluginAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void BasicPluginAudioProcessor::changeProgramName (int index, const String& newName)
 {
 }
 
@@ -107,13 +107,13 @@ void BasicPluginAudioProcessor::releaseResources()
 bool BasicPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
   #if JucePlugin_IsMidiEffect
-    juce::ignoreUnused (layouts);
+    ignoreUnused (layouts);
     return true;
   #else
     // This is the place where you check if the layout is supported.
     // In this template code we only support mono or stereo.
-    if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
-     && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
+    if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono()
+     && layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
         return false;
 
     // This checks if the input layout matches the output layout
@@ -127,9 +127,9 @@ bool BasicPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 }
 #endif
 
-void BasicPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void BasicPluginAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
 {
-    juce::ScopedNoDenormals noDenormals;
+    ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
@@ -146,7 +146,7 @@ bool BasicPluginAudioProcessor::hasEditor() const
     return true; // (change this to false if you choose to not supply an editor)
 }
 
-juce::AudioProcessorEditor* BasicPluginAudioProcessor::createEditor()
+AudioProcessorEditor* BasicPluginAudioProcessor::createEditor()
 {
     return new BasicPluginAudioProcessorEditor (*this);
 }
@@ -155,20 +155,20 @@ juce::AudioProcessorEditor* BasicPluginAudioProcessor::createEditor()
  * Set the memory block to contain ValueTree of type "BasicPlugin" with the single parameter "gain"
  * @param destData
  */
-void BasicPluginAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
+void BasicPluginAudioProcessor::getStateInformation (MemoryBlock& destData)
 {
-    juce::ValueTree pluginData("BasicPlugin");
+    ValueTree pluginData("BasicPlugin");
     pluginData.setProperty("gain", gain, nullptr);
 
-    juce::MemoryOutputStream outputData;
+    MemoryOutputStream outputData;
     pluginData.writeToStream(outputData);
     destData = outputData.getMemoryBlock();
 }
 
 void BasicPluginAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
-    juce::MemoryInputStream inputData(data, sizeInBytes, false);
-    auto pluginData = juce::ValueTree::readFromStream(inputData);
+    MemoryInputStream inputData(data, sizeInBytes, false);
+    auto pluginData = ValueTree::readFromStream(inputData);
 
     if (pluginData.isValid() && pluginData.hasType("BasicPlugin") && pluginData.hasProperty("gain")) {
         gain = pluginData.getProperty("gain");
@@ -180,7 +180,7 @@ void BasicPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 
 //==============================================================================
 // This creates new instances of the plugin..
-juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
+AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new BasicPluginAudioProcessor();
 }
