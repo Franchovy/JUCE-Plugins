@@ -33,6 +33,7 @@ private:
     BasicPluginAudioProcessor& processor;
 
     juce::Slider volumeSlider; // [1]
+    juce::Label volumeSliderLabel;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (BasicPluginAudioProcessorEditor)
 };

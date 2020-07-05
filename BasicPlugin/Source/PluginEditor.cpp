@@ -25,12 +25,18 @@ BasicPluginAudioProcessorEditor::BasicPluginAudioProcessorEditor (BasicPluginAud
     volumeSlider.setPopupDisplayEnabled (true, false, this);
     volumeSlider.setTextValueSuffix (" dB");
     volumeSlider.setValue(1.0);
-    volumeSlider.setSize(40, 30);
+    volumeSlider.setSize(40, 200);
 
     addAndMakeVisible (volumeSlider);
 
-    juce::Label volumeSliderLabel;
+    juce::Font labelFont = volumeSliderLabel.getFont();
+    labelFont.setBold(true);
+    labelFont.setHeight(20.0f);
+
     volumeSliderLabel.setText("Gain", juce::sendNotificationSync);
+    volumeSliderLabel.setColour(juce::Label::ColourIds::textColourId, juce::Colours::black);
+    volumeSliderLabel.setFont(labelFont);
+
     addAndMakeVisible(volumeSliderLabel);
 
     // add the listener to the slider
@@ -61,7 +67,9 @@ void BasicPluginAudioProcessorEditor::resized()
     sliderItem.width = volumeSlider.getWidth();
 
     parameters.items.add(sliderItem);
-    parameters.performLayout(juce::Rectangle<int>(40, 30, getWidth() - 40, getHeight() - 60));
+    parameters.performLayout(juce::Rectangle<int>(40, 60, getWidth() - 40, getHeight() - 60));
+
+    volumeSliderLabel.setBounds(volumeSlider.getX() - 5, volumeSlider.getY() - 35, 80, 40);
 
 }
 
